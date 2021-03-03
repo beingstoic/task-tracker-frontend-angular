@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { login } from '../model/login';
+import { Observable } from 'rxjs';
+
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
+
+const AUTH_API = 'http://localhost:8293/';
 
 @Injectable({
   providedIn: 'root'
@@ -9,13 +16,14 @@ export class LoginserviceService {
 
   constructor(private http:HttpClient) { }
 
-  checkadminlogin(login:login){
-    console.log(login);
-    return this.http.post("http://localhost:8293/admin/login", login);
+
+
+  checkEmpLogin(login): Observable<any> {
+    return this.http.post(AUTH_API + 'employee/login', login, httpOptions);
   }
-  checkemplogin(login:login){
-    console.log(login);
-    return this.http.post(`http://localhost:8293/employee/login`, login);
+
+  checkAdminLogin(login): Observable<any> {
+    return this.http.post(AUTH_API + 'admin/login', login, httpOptions);
   }
 
 }

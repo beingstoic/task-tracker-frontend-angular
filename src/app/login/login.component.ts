@@ -17,22 +17,12 @@ export class LoginComponent implements OnInit {
   inputType="password"
   admin:admin;
   employee:employee;
-  role: any=['ADMIN','EMPLOYEE']
+  roles: String[]=['ADMIN','EMPLOYEE']
   
 
   constructor(private router: Router,
     private loginservice: LoginserviceService,public fb: FormBuilder) { }
 
-     /*########### Form ###########*/
-  registrationForm = this.fb.group({
-    roleName: ['']
-  })
-
-  changeCity(e) {
-    this.role.setValue(e.target.value, {
-      onlySelf: true
-    })
-  }
 
     ngOnInit() {
       this.login = new login();
@@ -41,9 +31,9 @@ export class LoginComponent implements OnInit {
 
     onSubmit(){
       if(this.login.role=="ADMIN"){
-      this.loginservice.checkadminlogin(this.login).subscribe((r : admin) => {
-        this.admin= r;
-        console.log(admin);
+      this.loginservice.checkAdminLogin(this.login).subscribe((data) => {
+       // this.admin= r;
+        console.log(data);
         this.router.navigate(['../admindashboard/']);
         
       },err => {
@@ -57,17 +47,22 @@ export class LoginComponent implements OnInit {
     }//first if
 
      if(this.login.role=="EMPLOYEE"){
-      this.loginservice.checkemplogin(this.login).subscribe((r : employee) => {
-        this.employee= r;
-        console.log(employee);
+      this.loginservice.checkEmpLogin(this.login).subscribe((data) => {
+        console.log(data);
         this.router.navigate(['../employeedashboard']);
         
       },err => {
         if (err instanceof HttpErrorResponse) {
-          if (err.status === 400) { 
+          if (err.status === 401) { 
             
-            window.alert("Credentials Are Wrong");
+            window.alert("Invalid username or password");
           }
+          else if(err.status===400){
+            window.alert("Invalid request");
+          }
+          else {
+            window.alert("Its not you, It's us. Please try again later")
+          };
         }
       })
     }//second if

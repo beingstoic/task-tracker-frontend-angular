@@ -1,95 +1,145 @@
 <div class="wrapper">
-    <br>
-    <div class="card-body">
-
-        <div class="form-row">
-            <div class="col">
-                <form (ngSubmit)="onSubmit()" #addForm="ngForm">
-                    <h3>Login</h3>
-                    <br>
-                    <div class="form-holder">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">
-							
-							<i class="fa fa-user-circle-o"></i></span></div>
-                            <input type="text" class="form-control" placeholder="email" required minlength="4" [(ngModel)]="login.email" #email=ngModel name="email" id="email">
-                            <div *ngIf="email.touched && email.dirty && email.invalid" class="form-input-error-msg alert alert-danger">
-                                <div *ngIf="email.errors.required">Field Cannot be Empty</div>
-                                <div *ngIf="email.errors.minlength">Must have atleast 4 characters</div>
-                               
-                            </div>                
-                            
-                        </div>
-                    </div>
-                    <br>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1"><i class="fa fa-key"></i></span>
-                            </div>
-                            <input type={{inputType}} placeholder="Password" #pwd="ngModel" name="passWord" class="form-control" [(ngModel)]='login.password' required />
-                            <div class="input-group-append">
-                                <span class="input-group-text"><a class="fa fa-eye clickable"
-										(click)='toggle()'></a></span>
-                            </div>
-                        </div>
-                        <span *ngIf='!pwd.valid && pwd.touched'>
-							<p class="errorText">Please enter password</p>
-						</span>
-                    </div>
-                    <!-- </div> -->
-                    <br>
-                    <div class="form-holder">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">
-							
-							<i class="fa fa-user-circle-o"></i></span></div>
-                            <input type="text" class="form-control" placeholder="role" required minlength="5" [(ngModel)]="login.role" #role=ngModel name="role" id="role">
-                            <div *ngIf="role.touched && email.dirty && role.invalid" class="form-input-error-msg alert alert-danger">
-                                <div *ngIf="role.errors.required">Field Cannot be Empty</div>
-                                <div *ngIf="role.errors.minlength">Must have atleast 4 characters</div>    
-                            
-                        </div>
-                    </div>
-                    </div>
-                    <br>
-                    <div class="form-group">
-                        <input class="btn btn-success" [disabled]="!addForm.valid" type="submit" name="submit_reg" value="Login">&nbsp;
-                    </div>
-
-                </form>
-                 <!--end of form-->
-            </div>
-            <!--end of 1st col-->
-        </div>
-        <!--end of form-row-->
-
+  <br />
+  <div class="card">
+    <div class="card-header">
+      <h1 class="card-heading">Login to the Console</h1>
     </div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="col">
+          <form (ngSubmit)="onSubmit()" #addForm="ngForm">
+            <br />
+            <div class="form-holder">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1">
+                    <i class="fa fa-user-circle-o"></i
+                  ></span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="email"
+                  required
+                  minlength="4"
+                  [(ngModel)]="login.email"
+                  #email="ngModel"
+                  name="email"
+                  id="email"
+                />
+                <div
+                  *ngIf="email.touched && email.dirty && email.invalid"
+                  class="form-input-error-msg alert alert-danger"
+                >
+                  <div *ngIf="email.errors.required">Field Cannot be Empty</div>
+                  <div *ngIf="email.errors.minlength">
+                    Must have atleast 4 characters
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br />
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1"
+                    ><i class="fa fa-key"></i
+                  ></span>
+                </div>
+                <input
+                  type="{{ inputType }}"
+                  placeholder="Password"
+                  #pwd="ngModel"
+                  name="passWord"
+                  class="form-control"
+                  [(ngModel)]="login.password"
+                  required
+                />
+                <div class="input-group-append">
+                  <span class="input-group-text"
+                    ><a class="fa fa-eye clickable" (click)="toggle()"></a
+                  ></span>
+                </div>
+              </div>
+              <span *ngIf="!pwd.valid && pwd.touched">
+                <p class="errorText">Please enter password</p>
+              </span>
+            </div>
+            <!-- </div> -->
+            <br />
+            <div class="form-holder">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1">
+                    <i class="fa fa-user-circle-o"></i
+                  ></span>
+                </div>
+
+                <select
+                  class="form-control"
+                  placeholder="role"
+                  required
+                  [(ngModel)]="login.role"
+                  #role="ngModel"
+                  name="role"
+                  id="role"
+                >
+                  <option *ngFor="let role of roles" [value]="role">
+                    {{ role }}
+                  </option>
+                </select>
+                <div
+                  *ngIf="role.touched && email.dirty && role.invalid"
+                  class="form-input-error-msg alert alert-danger"
+                >
+                  <div *ngIf="role.errors.required">Field Cannot be Empty</div>
+                  <div *ngIf="role.errors.minlength">
+                    Must have atleast 4 characters
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br />
+            <div class="form-group">
+              <input
+                class="btn btn-success"
+                [disabled]="!addForm.valid"
+                type="submit"
+                name="submit_reg"
+                value="Login"
+              />&nbsp;
+            </div>
+          </form>
+          <!--end of form-->
+        </div>
+        <!--end of 1st col-->
+      </div>
+    </div>
+
+    <!--end of form-row-->
+
     <!--end of card-body-->
-</div>
-<!--end of wrapper-->
+  </div>
+  <!--end of wrapper-->
 
-<script>
-    var app = angular.module('show_hide_password', []);
+  <script>
+    var app = angular.module("show_hide_password", []);
 
-    app.controller('show_hide_password_controller', function($scope) {
+    app.controller("show_hide_password_controller", function ($scope) {
+      $scope.inputType = "password";
+      $scope.showHideClass = "glyphicon glyphicon-eye-open";
 
-        $scope.inputType = 'password';
-        $scope.showHideClass = 'glyphicon glyphicon-eye-open';
-
-        $scope.showPassword = function() {
-            if ($scope.password_field != null) {
-                if ($scope.inputType == 'password') {
-                    $scope.inputType = 'text';
-                    $scope.showHideClass = 'glyphicon glyphicon-eye-close';
-                } else {
-                    $scope.inputType = 'password';
-                    $scope.showHideClass = 'glyphicon glyphicon-eye-open';
-                }
-            }
-        };
-
+      $scope.showPassword = function () {
+        if ($scope.password_field != null) {
+          if ($scope.inputType == "password") {
+            $scope.inputType = "text";
+            $scope.showHideClass = "glyphicon glyphicon-eye-close";
+          } else {
+            $scope.inputType = "password";
+            $scope.showHideClass = "glyphicon glyphicon-eye-open";
+          }
+        }
+      };
     });
-</script>
+  </script>
+</div>
