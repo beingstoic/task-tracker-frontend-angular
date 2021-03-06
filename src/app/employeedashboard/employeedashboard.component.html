@@ -1,1 +1,56 @@
-<p>employeedashboard works!</p>
+<div class="container-fluid mt--6">
+  <div class="tab-content" id="pills-tabContent">
+    <div
+      class="tab-pane fade show active"
+      id="pills-all"
+      role="tabpanel"
+      aria-labelledby="pills-all-tab"
+    >
+      <div class="row">
+        <div class="col vertical-scroll">
+          <div class="card">
+            <!-- Card header -->
+            <div class="card-header">
+              <h3 class="mb-0">All Tasks</h3>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-flush" id="datatable-basic">
+                <thead class="thead-light">
+                  <tr>
+                    <div>da</div>
+                  </tr>
+                  <tr>
+                    <th>SNo.</th>
+                    <th>TaskName</th>
+                    <th>Task Description</th>
+                    <th>Start Task</th>
+                    <th>End Task</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let task of storedTasks">
+                    <td>{{ task.taskId }}</td>
+                    <td>{{ task.taskName }}</td>
+                    <td>{{ task.additionalDetails }}</td>
+                    <td>
+                      <button (click)="startTask(task)" class="btn btn-primary">
+                        Start Task
+                      </button>
+                    </td>
+                    <td>
+                      <button (click)="endTask(task)" class="btn btn-primary">
+                        End Task
+                      </button>
+                    </td>
+                    <td>fff</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

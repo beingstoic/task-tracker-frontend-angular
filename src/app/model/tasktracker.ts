@@ -1,11 +1,12 @@
-import { employee } from "./employee";
+import { Employee } from './employee';
 
-export class tasktracker{
-    taskId:number;
-    empId:employee;
-    taskDate:Date;
-    taskName:string;
-    additionalDetails:string;
-    startTime:Date;
-    endTime:Date;
+export class TaskTracker {
+  taskId: number;
+  empId: Employee;
+  taskDate: Date;
+  taskName: string;
+  additionalDetails: string;
+  startTime: Date;
+  endTime: Date;
+  duration: number;
 }
