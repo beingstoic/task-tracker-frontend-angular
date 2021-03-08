@@ -31,23 +31,36 @@
         </div>
       </div>
 
-      <form class="task-bar" (ngSubmit)="onSubmit()">
+      <form class="task-bar" [formGroup]="form" (ngSubmit)="onSubmit()">
         <h3>Add New Task</h3>
         <div class="form-group">
           <label for="taskName">Select Task</label>
           <select
-            [(ngModel)]="model.taskName"
+            formControlName="taskName"
             name="taskName"
-            #taskName="ngModel"
             class="input form-control"
             placeholder="Task Name"
             id="taskName"
             required
+            [ngClass]="{
+              'is-invalid':
+                (f.taskName.touched && f.taskName.dirty) || f.taskName.invalid
+            }"
           >
             <option *ngFor="let taskName of tasks" [value]="taskName">
               {{ taskName }}
             </option>
           </select>
+          <span
+            class="invalid-feedback"
+            *ngIf="
+              ((f.taskName.touched && f.taskName.dirty) ||
+                f.taskName.hasError('required')) &&
+              f.taskName.invalid
+            "
+          >
+            Task Name is Required!!
+          </span>
         </div>
         <div class="form-group">
           <label for="description">Task Description</label>
@@ -57,11 +70,82 @@
             cols="10"
             rows="3"
             class="form-control"
-            [(ngModel)]="model.additionalDetails"
+            formControlName="additionalDetails"
+            [ngClass]="{
+              'is-invalid':
+                f.additionalDetails.touched &&
+                f.additionalDetails.dirty &&
+                f.additionalDetails.invalid
+            }"
           ></textarea>
+          <span
+            class="invalid-feedback"
+            *ngIf="
+              (f.additionalDetails.touched &&
+                f.taskName.dirty &&
+                f.additionalDetails.hasError('required') &&
+                f.taskName.invalid) ||
+              submitted
+            "
+            >Task description is required</span
+          >
         </div>
 
-        <button class="btn btn-primary">Start Task</button>
+        <button
+          type="button"
+          data-target="#confirm"
+          data-toggle="modal"
+          class="btn btn-primary"
+        >
+          Start Task
+        </button>
+
+        <!-- Modal -->
+        <div
+          class="modal fade"
+          id="confirm"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  Start New Task
+                </h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                Are you sure, you want to start a new task?
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  data-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button
+                  type="submit"
+                  data-dismiss="modal"
+                  class="btn btn-success"
+                >
+                  Save changes
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </form>
     </div>
     <div
@@ -84,7 +168,6 @@
                     <th>SNo.</th>
                     <th>TaskName</th>
                     <th>Task Description</th>
-                    <th>Start Task</th>
                     <th>End Task</th>
                     <th>Status</th>
                   </tr>
@@ -95,16 +178,16 @@
                     <td>{{ task.taskName }}</td>
                     <td>{{ task.additionalDetails }}</td>
                     <td>
-                      <button (click)="startTask(task)" class="btn btn-primary">
-                        Start Task
-                      </button>
-                    </td>
-                    <td>
-                      <button (click)="endTask(task)" class="btn btn-primary">
+                      <button
+                        (click)="endTask(task)"
+                        [disabled]="task.duration"
+                        class="btn btn-primary"
+                      >
                         End Task
                       </button>
                     </td>
-                    <td>fff</td>
+                    <td *ngIf="!task.duration">In Progress</td>
+                    <td *ngIf="task.duration">Ended</td>
                   </tr>
                 </tbody>
               </table>

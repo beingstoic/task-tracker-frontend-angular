@@ -17,17 +17,17 @@ export class EmployeeService {
     );
   }
 
-  startNewTask(model): Observable<TaskTracker> {
-    this.fetchEmpById(model.employee.empId).subscribe((data) =>
-      console.log(data)
-    );
-    console.log(model.employee);
-    return this.http.post<TaskTracker>(baseUrl + 'tasktracker/', model);
+  startNewTask(newTask: TaskTracker): Observable<TaskTracker> {
+    return this.http.post<TaskTracker>(baseUrl + 'tasktracker/', newTask);
   }
 
   fetchEmpById(empId: String): Observable<Employee> {
     return this.http.get<Employee>(
       baseUrl + 'employee/fetch-employee/' + empId
     );
+  }
+
+  endTask(task: TaskTracker): Observable<TaskTracker> {
+    return this.http.put<TaskTracker>(baseUrl + 'tasktracker/', task);
   }
 }

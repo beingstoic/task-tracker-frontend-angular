@@ -2,7 +2,7 @@ import { Employee } from './employee';
 
 export class TaskTracker {
   taskId: number;
-  empId: Employee;
+  employee: Employee;
   taskDate: Date;
   taskName: string;
   additionalDetails: string;
