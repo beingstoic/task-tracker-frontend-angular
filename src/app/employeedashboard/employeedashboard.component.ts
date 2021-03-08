@@ -35,8 +35,8 @@ export class EmployeedashboardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.reloadData();
     this.createForm();
+    this.reloadData();
   }
 
   get f() {
@@ -46,18 +46,33 @@ export class EmployeedashboardComponent implements OnInit {
   createForm() {
     this.form = new FormGroup({
       taskName: new FormControl('', [Validators.required]),
-      additionalDetails: new FormControl('', [Validators.required]),
+      additionalDetails: new FormControl('', [
+        Validators.required,
+        Validators.minLength(10),
+      ]),
     });
   }
 
   reloadData() {
-    this.employeeService.fetchAssignedTasks(this.empId).subscribe((data) => {
-      this.storedTasks = data;
-      console.log(data);
-    });
-    this.employeeService
-      .fetchEmpById(this.empId)
-      .subscribe((data) => (this.employee = data));
+    this.employeeService.fetchAssignedTasks(this.empId).subscribe(
+      (data) => {
+        this.storedTasks = data;
+        console.log(data);
+      },
+      (err) => {
+        console.log(err);
+      },
+      () => {
+        this.fetchEmployee();
+      }
+    );
+  }
+
+  fetchEmployee() {
+    this.employeeService.fetchEmpById(this.empId).subscribe(
+      (data) => (this.employee = data),
+      (err) => console.log(err)
+    );
   }
 
   onSubmit() {
@@ -66,18 +81,22 @@ export class EmployeedashboardComponent implements OnInit {
       this.success = false;
       return;
     }
+    console.log(this.form);
     this.newTask = Object.assign(this.newTask, this.form.value);
     this.newTask.employee = this.employee;
-    console.log(this.newTask);
-    this.employeeService
-      .startNewTask(this.newTask)
-      .subscribe((data) => console.log(data));
-    this.reloadData();
+    this.employeeService.startNewTask(this.newTask).subscribe(
+      (data) => console.log(data),
+      (err) => console.log(err),
+      () => this.reloadData()
+    );
   }
 
   endTask(task: TaskTracker) {
-    this.employeeService.endTask(task).subscribe((data) => console.log(data));
-    this.reloadData();
+    this.employeeService.endTask(task).subscribe(
+      (data) => console.log(data),
+      (err) => console.log(err),
+      () => this.reloadData()
+    );
   }
   startTask(task: TaskTracker) {}
 }
