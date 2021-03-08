@@ -10,7 +10,9 @@ import { EmployeeService } from '../service/employee.service';
 })
 export class EmployeedashboardComponent implements OnInit {
   storedTasks: TaskTracker[];
-  tasks: ['Online Training', 'Meeting', 'Travelling', 'Interview'];
+  model: any = {};
+  today: number = Date.now();
+  tasks: string[] = ['Online Training', 'Meeting', 'Travelling', 'Interview'];
   empId: string = String(localStorage.getItem('empId'));
   constructor(
     private router: Router,
@@ -24,10 +26,16 @@ export class EmployeedashboardComponent implements OnInit {
   reloadData() {
     this.employeeService.fetchAssignedTasks(this.empId).subscribe((data) => {
       this.storedTasks = data;
-      console.log(data);
+      console.log(this.storedTasks);
     });
   }
 
+  onSubmit() {
+    this.model.employee.empId = this.empId;
+    this.employeeService
+      .startNewTask(this.model)
+      .subscribe((data) => console.log());
+  }
   endTask(task: TaskTracker) {}
   startTask(task: TaskTracker) {}
 }

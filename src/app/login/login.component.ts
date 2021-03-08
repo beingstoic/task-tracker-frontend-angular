@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
     this.loginservice.checkAdminLogin(this.login).subscribe(
       (data) => {
         console.log(data);
-        localStorage.setItem('empId', data.adminId);
+        localStorage.setItem('admin', data);
         this.router.navigate(['../admindashboard/']);
       },
       (err) => this.errorHandler(err)
@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit {
     this.loginservice.checkEmpLogin(this.login).subscribe(
       (data) => {
         console.log(data);
-        localStorage.setItem('empId', data.empId);
+        localStorage.setItem('employee', data);
         this.router.navigate(['../employeedashboard']);
       },
       (err) => this.errorHandler(err)

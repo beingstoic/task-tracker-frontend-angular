@@ -1,5 +1,69 @@
 <div class="container-fluid mt--6">
   <div class="tab-content" id="pills-tabContent">
+    <div class="employee-section">
+      <div class="employee-details">
+        <!-- <img
+          class="card-img-top"
+          src="https://www.capgemini.com/us-en/wp-content/uploads/sites/4/2018/08/cropped-cropped-capgemini_logo_color_rgb.png"
+          alt="Card image cap"
+        /> -->
+        <div class="welcome">
+          <h3 class="emp-name">Hi, Tushar</h3>
+          <p>Today is {{ today | date }}</p>
+        </div>
+        <div class="">
+          <div class="detail-row">
+            <span class="desc-label">Employee ID:</span>
+            <span class="desc">CG001</span>
+          </div>
+          <div class="detail-row">
+            <span class="desc-label">Business Unit:</span>
+            <span class="desc">Europe CSD</span>
+          </div>
+          <div class="detail-row">
+            <span class="desc-label">Designation:</span>
+            <span class="desc">Senior Software Engineer</span>
+          </div>
+          <div class="detail-row">
+            <span class="desc-label">Performance Reviewer(N+1):</span>
+            <span class="desc">Ms. Hema Gandhi</span>
+          </div>
+        </div>
+      </div>
+
+      <form class="task-bar" (ngSubmit)="onSubmit()">
+        <h3>Add New Task</h3>
+        <div class="form-group">
+          <label for="taskName">Select Task</label>
+          <select
+            [(ngModel)]="model.taskName"
+            name="taskName"
+            #taskName="ngModel"
+            class="input form-control"
+            placeholder="Task Name"
+            id="taskName"
+            required
+          >
+            <option *ngFor="let taskName of tasks" [value]="taskName">
+              {{ taskName }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="description">Task Description</label>
+          <textarea
+            name="description"
+            id="description"
+            cols="10"
+            rows="3"
+            class="form-control"
+            [(ngModel)]="model.additionalDetails"
+          ></textarea>
+        </div>
+
+        <button class="btn btn-primary">Start Task</button>
+      </form>
+    </div>
     <div
       class="tab-pane fade show active"
       id="pills-all"
@@ -16,9 +80,6 @@
             <div class="table-responsive">
               <table class="table table-flush" id="datatable-basic">
                 <thead class="thead-light">
-                  <tr>
-                    <div>da</div>
-                  </tr>
                   <tr>
                     <th>SNo.</th>
                     <th>TaskName</th>
