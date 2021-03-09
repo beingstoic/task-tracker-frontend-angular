@@ -4,6 +4,8 @@ import { TaskTracker } from '../model/tasktracker';
 import { EmployeeService } from '../service/employee.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Employee } from '../model/employee';
+import { ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'app-employeedashboard',
   templateUrl: './employeedashboard.component.html',
@@ -15,9 +17,7 @@ export class EmployeedashboardComponent implements OnInit {
   form: FormGroup;
   newTask: TaskTracker = new TaskTracker();
   today: number = Date.now();
-  submitted: Boolean = false;
-  success: boolean = false;
-  fail: boolean = false;
+
   tasks: string[] = [
     'Online Training',
     'Meeting',
@@ -31,7 +31,8 @@ export class EmployeedashboardComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private employeeService: EmployeeService
+    private employeeService: EmployeeService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
@@ -67,34 +68,39 @@ export class EmployeedashboardComponent implements OnInit {
       }
     );
   }
-
+  errorHandler(err) {
+    if (err.error.message != null)
+      this.toastr.error('Error', err.error.message);
+    else
+      this.toastr.error('Error', 'Request Timed out, Please try again later');
+  }
   fetchEmployee() {
     this.employeeService.fetchEmpById(this.empId).subscribe(
       (data) => (this.employee = data),
-      (err) => console.log(err)
+      (err) => this.errorHandler(err)
     );
   }
 
   onSubmit() {
-    this.submitted = true;
-    if (!this.form.valid) {
-      this.success = false;
-      return;
-    }
-    console.log(this.form);
     this.newTask = Object.assign(this.newTask, this.form.value);
     this.newTask.employee = this.employee;
     this.employeeService.startNewTask(this.newTask).subscribe(
-      (data) => console.log(data),
-      (err) => console.log(err),
+      (data) => {
+        console.log(data);
+        this.toastr.success('Task added Successfully');
+      },
+      (err) => this.errorHandler(err),
       () => this.reloadData()
     );
   }
 
   endTask(task: TaskTracker) {
     this.employeeService.endTask(task).subscribe(
-      (data) => console.log(data),
-      (err) => console.log(err),
+      (data) =>
+        this.toastr.success(
+          "Great Job, You've successfully completed the task."
+        ),
+      (err) => this.errorHandler(err),
       () => this.reloadData()
     );
   }

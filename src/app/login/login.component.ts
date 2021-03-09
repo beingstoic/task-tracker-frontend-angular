@@ -6,6 +6,7 @@ import { Employee } from '../model/employee';
 import { login } from '../model/login';
 import { LoginserviceService } from '../service/loginservice.service';
 import { FormBuilder, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -21,7 +22,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private router: Router,
     private loginservice: LoginserviceService,
-    public fb: FormBuilder
+    public fb: FormBuilder,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
@@ -63,14 +65,9 @@ export class LoginComponent implements OnInit {
   }
 
   errorHandler(err) {
-    if (err instanceof HttpErrorResponse) {
-      if (err.status === 401) {
-        window.alert('Invalid username or password');
-      } else if (err.status === 400) {
-        window.alert('Invalid request');
-      } else {
-        window.alert("Its not you, It's us. Please try again later");
-      }
-    }
+    if (err.error.message != null)
+      this.toastr.error('Error', err.error.message);
+    else
+      this.toastr.error('Error', 'Request Timed out, Please try again later');
   }
 }

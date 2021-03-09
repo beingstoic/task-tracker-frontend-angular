@@ -1,4 +1,4 @@
-<div class="container-fluid mt--6">
+<div class="container-fluid mt--6 mb-3">
   <div class="tab-content" id="pills-tabContent">
     <div class="employee-section">
       <div class="employee-details">
@@ -183,6 +183,7 @@
                     <td>{{ task.additionalDetails }}</td>
                     <td>
                       <button
+                        *ngIf="!task.duration"
                         (click)="endTask(task)"
                         [disabled]="task.duration"
                         class="btn btn-primary"

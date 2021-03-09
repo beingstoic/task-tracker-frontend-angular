@@ -26,3 +26,7 @@
 .card-img-top {
   height: 30vh;
 }
+
+.table-responsive {
+  height: 450px;
+}
