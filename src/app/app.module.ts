@@ -10,6 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { DurationPipe } from './duration.pipe';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { ToastrModule } from 'ngx-toastr';
     LoginComponent,
     AdmindashboardComponent,
     EmployeedashboardComponent,
+    DurationPipe,
   ],
   imports: [
     BrowserModule,
