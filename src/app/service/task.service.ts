@@ -31,4 +31,44 @@ export class TaskService {
       date
     );
   }
+
+  fetchByTaskName(taskName: String): Observable<TaskTracker[]> {
+    return this.http.get<TaskTracker[]>(
+      baseUrl + 'tasktracker/fetch-tasks-by-name/' + taskName
+    );
+  }
+
+  fetchTasksByDateAndName(
+    date: Date,
+    taskName: string
+  ): Observable<TaskTracker[]> {
+    return this.http.get<TaskTracker[]>(
+      baseUrl + 'tasktracker/fetch-by-name-and-date/' + taskName + '/' + date
+    );
+  }
+
+  fetchTasksByEmpIdAndName(
+    empId: string,
+    taskName: string
+  ): Observable<TaskTracker[]> {
+    return this.http.get<TaskTracker[]>(
+      baseUrl + 'tasktracker/fetch-by-empid-and-name/' + empId + '/' + taskName
+    );
+  }
+
+  fetchTasksByEmpIdDateAndName(
+    empId: string,
+    date: Date,
+    taskName: string
+  ): Observable<TaskTracker[]> {
+    return this.http.get<TaskTracker[]>(
+      baseUrl +
+        'tasktracker/fetch-by-empid-name-and-date/' +
+        empId +
+        '/' +
+        date +
+        '/' +
+        taskName
+    );
+  }
 }

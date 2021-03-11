@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { DisplayModel } from '../model/model';
 import { TaskTracker } from '../model/tasktracker';
 import { EmployeeService } from '../service/employee.service';
 import { TaskService } from '../service/task.service';
@@ -25,6 +26,8 @@ export class AdmindashboardComponent implements OnInit {
   today: Date = new Date(Date.now());
   yesterday: Date = new Date();
   resultsDate: Date = this.yesterday;
+  display: DisplayModel;
+  displayObject: DisplayModel[] = new Array();
   formObject = {
     startDate: new Date(),
     taskName: '',
@@ -43,6 +46,46 @@ export class AdmindashboardComponent implements OnInit {
     this.populate();
   }
 
+  sortFetchedTasks() {
+    let length = 0;
+    this.displayObject = [];
+    console.log(this.displayObject.length);
+    this.fetchedTasks.map((task) => {
+      let flag = 0;
+
+      for (let i = 0; i <= length; i++) {
+        if (this.displayObject.length === 0) {
+          let display = new DisplayModel();
+          display.empId = task.employee.empId;
+          display.name = task.employee.name;
+          display.totalDuration += task.duration;
+          display.tasks.push(task);
+          this.displayObject.push(display);
+        } else if (length !== 0) {
+          if (task.employee.empId === this.displayObject[i].empId) {
+            this.displayObject[i].totalDuration += task.duration;
+            this.displayObject[i].tasks.push(task);
+            flag = 1;
+          }
+        }
+      }
+      if (flag === 0) {
+        let display = new DisplayModel();
+        display.empId = task.employee.empId;
+        display.name = task.employee.name;
+        display.totalDuration += task.duration;
+        display.tasks.push(task);
+        this.displayObject.push(display);
+        length = length + 1;
+        console.log('hii ', length);
+      }
+
+      flag = 0;
+    });
+
+    console.log(this.displayObject);
+  }
+
   get f() {
     return this.form.controls;
   }
@@ -59,17 +102,6 @@ export class AdmindashboardComponent implements OnInit {
     this.fetchTasksByDate(this.yesterday);
   }
 
-  durationConvertor(s) {
-    let ms = s % 1000;
-    s = (s - ms) / 1000;
-    let secs = s % 60;
-    s = (s - secs) / 60;
-    let mins = s % 60;
-    let hrs = (s - mins) / 60;
-
-    return hrs + ':' + mins + ':' + secs;
-  }
-
   createForm() {
     this.form = new FormGroup({
       startDate: new FormControl(''),
@@ -79,32 +111,73 @@ export class AdmindashboardComponent implements OnInit {
   }
   onSubmit() {
     Object.assign(this.formObject, this.form.value);
-    // console.log(this.formObject);
+    console.log(this.formObject.startDate);
 
+    //start date is not null, rest are null
     if (
-      this.formObject.startDate != null &&
+      this.formObject.startDate &&
       this.formObject.empId === '' &&
       this.formObject.taskName === ''
     ) {
-      console.log(this.formObject);
       this.fetchTasksByDate(new Date(this.formObject.startDate));
-    } else if (
-      this.formObject.startDate != null &&
+    }
+
+    //startdate and employee id is not null
+    else if (
+      this.formObject.startDate &&
       this.formObject.empId != '' &&
       this.formObject.taskName === ''
-    ) {
+    )
       this.fetchTasksByEmpIdAndDate(
         this.formObject.empId,
         new Date(this.formObject.startDate)
       );
-    }
-
-    if (
-      this.formObject.empId != null &&
-      this.formObject.startDate != null &&
-      this.formObject.empId != null
-    ) {
-    }
+    //only employee id is present
+    else if (
+      !this.formObject.startDate &&
+      this.formObject.empId != '' &&
+      this.formObject.taskName === ''
+    )
+      this.fetchTasksByEmpId(this.formObject.empId);
+    //only taskName is not null
+    else if (
+      !this.formObject.startDate &&
+      this.formObject.empId === '' &&
+      this.formObject.taskName != ''
+    )
+      this.fetchTasksByTaskName(this.formObject.taskName);
+    //start date and taskname are not null
+    else if (
+      this.formObject.startDate &&
+      this.formObject.empId === '' &&
+      this.formObject.taskName != ''
+    )
+      this.fetchTasksByDateAndName(
+        this.formObject.startDate,
+        this.formObject.taskName
+      );
+    //only startdate is null
+    else if (
+      !this.formObject.startDate &&
+      this.formObject.empId != '' &&
+      this.formObject.taskName != ''
+    )
+      this.fetchTasksByEmpIdAndName(
+        this.formObject.empId,
+        this.formObject.taskName
+      );
+    //All fields are present
+    else if (
+      this.formObject.startDate &&
+      this.formObject.empId != '' &&
+      this.formObject.taskName != ''
+    )
+      this.fetchTasksByEmpIdDateAndName(
+        this.formObject.empId,
+        this.formObject.startDate,
+        this.formObject.taskName
+      );
+    else this.toastr.info('Oops!', 'Search bar is empty');
   }
 
   // These functions are getting used for service calls in the backend
@@ -114,6 +187,7 @@ export class AdmindashboardComponent implements OnInit {
       (data) => {
         this.fetchedTasks = data;
         this.resultsDate = date;
+        this.sortFetchedTasks();
       },
       (err) => this.errorHandler(err)
     );
@@ -128,5 +202,63 @@ export class AdmindashboardComponent implements OnInit {
       },
       (err) => this.errorHandler(err)
     );
+  }
+
+  fetchTasksByEmpId(empId: string) {
+    this.taskService.fetchAssignedTasks(empId).subscribe(
+      (data) => {
+        this.fetchedTasks = data;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+
+  fetchTasksByTaskName(taskName: string) {
+    this.taskService.fetchByTaskName(taskName).subscribe(
+      (data) => {
+        console.log(data);
+        this.fetchedTasks = data;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+
+  fetchTasksByDateAndName(startDate: Date, taskName: string) {
+    this.taskService.fetchTasksByDateAndName(startDate, taskName).subscribe(
+      (data) => {
+        this.fetchedTasks = data;
+        this.resultsDate = startDate;
+      },
+      (err) => this.errorHandler(err)
+    );
+  }
+
+  fetchTasksByEmpIdAndName(empId: string, taskName: string) {
+    this.taskService.fetchTasksByEmpIdAndName(empId, taskName).subscribe(
+      (data) => {
+        this.fetchedTasks = data;
+      },
+      (err) => this.errorHandler(err)
+    );
+  }
+
+  fetchTasksByEmpIdDateAndName(
+    empId: string,
+    startDate: Date,
+    taskName: string
+  ) {
+    this.taskService
+      .fetchTasksByEmpIdDateAndName(empId, startDate, taskName)
+      .subscribe(
+        (data) => {
+          this.fetchedTasks = data;
+          this.resultsDate = startDate;
+        },
+        (err) => this.errorHandler(err)
+      );
   }
 }
