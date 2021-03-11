@@ -5,6 +5,7 @@ import { EmployeeService } from '../service/employee.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Employee } from '../model/employee';
 import { ToastrService } from 'ngx-toastr';
+import { TaskService } from '../service/task.service';
 
 @Component({
   selector: 'app-employeedashboard',
@@ -32,6 +33,7 @@ export class EmployeedashboardComponent implements OnInit {
   constructor(
     private router: Router,
     private employeeService: EmployeeService,
+    private taskService: TaskService,
     private toastr: ToastrService
   ) {}
 
@@ -55,7 +57,7 @@ export class EmployeedashboardComponent implements OnInit {
   }
 
   reloadData() {
-    this.employeeService.fetchAssignedTasks(this.empId).subscribe(
+    this.taskService.fetchTasksByEmpIdAndDate(this.empId, new Date()).subscribe(
       (data) => {
         this.storedTasks = data;
         console.log(data);

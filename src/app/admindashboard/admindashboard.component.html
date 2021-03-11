@@ -103,48 +103,48 @@
                 <th>Total Duration</th>
               </tr>
             </thead>
-            <tbody
-              *ngFor="let object of displayObject"
-              data-toggle="collapse"
-              data-target="#collapseExample"
-              aria-expanded="false"
-              aria-controls="collapseExample"
-            >
-              <tr>
+            <tbody *ngFor="let object of displayObject">
+              <tr
+                data-toggle="collapse"
+                [attr.data-target]="'#' + object.empId"
+                aria-expanded="false"
+                aria-controls="{{ object.empId }}"
+              >
                 <td>{{ object.empId }}</td>
                 <td>{{ object.name }}</td>
                 <td>{{ object.totalDuration | duration }}</td>
               </tr>
-              <tr>
-                <td colspan="3">
-                  <div
-                    class="table-responsive"
-                    id="collapseExample"
-                    colspan="4"
-                  >
-                    <table class="table table-flush" id="datatable-basic">
-                      <thead class="thead-light">
-                        <tr>
-                          <th>Emp ID</th>
-                          <th>Employee Name</th>
-                          <th>Task Name</th>
-                          <th>Duration</th>
-                          <th>Status</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr *ngFor="let task of object.tasks">
-                          <td>{{ task.employee.empId }}</td>
-                          <td>{{ task.employee.name }}</td>
-                          <td>{{ task.taskName }}</td>
-                          <td>{{ task.duration | duration }}</td>
-                          <td *ngIf="!task.duration">In Progress</td>
-                          <td *ngIf="task.duration">Ended</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </td>
+              <tr colspan="3">
+                <div
+                  class="table-responsive collapse collapse in"
+                  id="{{ object.empId }}"
+                  colspan="4"
+                >
+                  <table class="content-table" id="datatable-basic">
+                    <caption>
+                      Displaying tasks
+                    </caption>
+                    <thead>
+                      <tr>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Task Name</th>
+                        <th>Duration</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let task of object.tasks">
+                        <td>{{ task.startTime | date: "shortTime" }}</td>
+                        <td>{{ task.endTime | date: "shortTime" }}</td>
+                        <td>{{ task.taskName }}</td>
+                        <td>{{ task.duration | duration }}</td>
+                        <td *ngIf="!task.duration">In Progress</td>
+                        <td *ngIf="task.duration">Ended</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </tr>
             </tbody>
           </table>
