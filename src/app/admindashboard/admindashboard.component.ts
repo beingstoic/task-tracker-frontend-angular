@@ -48,6 +48,7 @@ export class AdmindashboardComponent implements OnInit {
 
   sortFetchedTasks() {
     let length = 0;
+    let firstFlag = 0;
     this.displayObject = [];
     console.log(this.displayObject.length);
     this.fetchedTasks.map((task) => {
@@ -55,13 +56,9 @@ export class AdmindashboardComponent implements OnInit {
 
       for (let i = 0; i <= length; i++) {
         if (this.displayObject.length === 0) {
-          let display = new DisplayModel();
-          display.empId = task.employee.empId;
-          display.name = task.employee.name;
-          display.totalDuration += task.duration;
-          display.tasks.push(task);
-          this.displayObject.push(display);
-        } else if (length !== 0) {
+          this.displayObject.push(this.newDisplayObject(task));
+          flag = 1;
+        } else if (length !== 0 || firstFlag === 1) {
           if (task.employee.empId === this.displayObject[i].empId) {
             this.displayObject[i].totalDuration += task.duration;
             this.displayObject[i].tasks.push(task);
@@ -70,22 +67,28 @@ export class AdmindashboardComponent implements OnInit {
         }
       }
       if (flag === 0) {
-        let display = new DisplayModel();
-        display.empId = task.employee.empId;
-        display.name = task.employee.name;
-        display.totalDuration += task.duration;
-        display.tasks.push(task);
-        this.displayObject.push(display);
+        this.displayObject.push(this.newDisplayObject(task));
         length = length + 1;
         console.log('hii ', length);
       }
-
+      if (this.displayObject.length === 1) {
+        firstFlag = 1;
+      }
       flag = 0;
     });
 
     console.log(this.displayObject);
   }
 
+  newDisplayObject(task: TaskTracker) {
+    let display = new DisplayModel();
+    display.empId = task.employee.empId;
+    display.name = task.employee.name;
+    display.totalDuration += task.duration;
+    display.tasks.push(task);
+
+    return display;
+  }
   get f() {
     return this.form.controls;
   }
@@ -199,6 +202,7 @@ export class AdmindashboardComponent implements OnInit {
       (data) => {
         this.fetchedTasks = data;
         this.resultsDate = date;
+        this.sortFetchedTasks();
       },
       (err) => this.errorHandler(err)
     );
@@ -208,6 +212,7 @@ export class AdmindashboardComponent implements OnInit {
     this.taskService.fetchAssignedTasks(empId).subscribe(
       (data) => {
         this.fetchedTasks = data;
+        this.sortFetchedTasks();
       },
       (err) => {
         console.log(err);
@@ -220,6 +225,7 @@ export class AdmindashboardComponent implements OnInit {
       (data) => {
         console.log(data);
         this.fetchedTasks = data;
+        this.sortFetchedTasks();
       },
       (err) => {
         console.log(err);
@@ -232,6 +238,7 @@ export class AdmindashboardComponent implements OnInit {
       (data) => {
         this.fetchedTasks = data;
         this.resultsDate = startDate;
+        this.sortFetchedTasks();
       },
       (err) => this.errorHandler(err)
     );
@@ -241,6 +248,7 @@ export class AdmindashboardComponent implements OnInit {
     this.taskService.fetchTasksByEmpIdAndName(empId, taskName).subscribe(
       (data) => {
         this.fetchedTasks = data;
+        this.sortFetchedTasks();
       },
       (err) => this.errorHandler(err)
     );
@@ -257,6 +265,7 @@ export class AdmindashboardComponent implements OnInit {
         (data) => {
           this.fetchedTasks = data;
           this.resultsDate = startDate;
+          this.sortFetchedTasks();
         },
         (err) => this.errorHandler(err)
       );
