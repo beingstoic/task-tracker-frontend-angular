@@ -11,6 +11,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { DurationPipe } from './duration.pipe';
+import { AuthGuard } from './service/auth.guard';
+import { BadtasksComponent } from './badtasks/badtasks.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +21,7 @@ import { DurationPipe } from './duration.pipe';
     AdmindashboardComponent,
     EmployeedashboardComponent,
     DurationPipe,
+    BadtasksComponent,
   ],
   imports: [
     BrowserModule,
@@ -29,7 +32,7 @@ import { DurationPipe } from './duration.pipe';
     ToastrModule.forRoot(),
     BrowserAnimationsModule,
   ],
-  providers: [],
+  providers: [AuthGuard],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

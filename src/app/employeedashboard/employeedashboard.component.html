@@ -1,4 +1,11 @@
 <div class="container-fluid mt--6 mb-3">
+  <button
+    class="btn btn-success float-right button"
+    style="color: white; width: 100px"
+    (click)="logout()"
+  >
+    <i class="fas fa-sign-out-alt"></i>&nbsp; Logout
+  </button>
   <div class="tab-content" id="pills-tabContent">
     <div class="employee-section">
       <div class="employee-details">
@@ -7,6 +14,7 @@
           src="https://www.capgemini.com/us-en/wp-content/uploads/sites/4/2018/08/cropped-cropped-capgemini_logo_color_rgb.png"
           alt="Card image cap"
         /> -->
+
         <div class="welcome">
           <h3 class="emp-name">Hi, Tushar</h3>
           <p>Today is {{ today | date }}</p>
@@ -163,7 +171,7 @@
           <div class="card">
             <!-- Card header -->
             <div class="card-header">
-              <h3 class="mb-0">All Tasks</h3>
+              <h3 class="mb-0">Today's Tasks</h3>
             </div>
             <div class="table-responsive">
               <table class="table table-flush" id="datatable-basic">

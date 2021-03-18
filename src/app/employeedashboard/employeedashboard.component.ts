@@ -107,4 +107,10 @@ export class EmployeedashboardComponent implements OnInit {
     );
   }
   startTask(task: TaskTracker) {}
+
+  logout() {
+    this.router.navigate(['./login']);
+    localStorage.removeItem('empId');
+    localStorage.removeItem('token');
+  }
 }

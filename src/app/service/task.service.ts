@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TaskTracker } from '../model/tasktracker';
+import { DisplayModel } from '../model/model';
 const baseUrl = 'http://localhost:8293/';
 @Injectable({
   providedIn: 'root',
@@ -69,6 +70,14 @@ export class TaskService {
         date +
         '/' +
         taskName
+    );
+  }
+
+  fetchBadTasksByDate(date: Date): Observable<DisplayModel[]> {
+    console.log(date);
+    return this.http.post<DisplayModel[]>(
+      baseUrl + 'tasktracker/fetch-bad-tasks-by-date/',
+      date
     );
   }
 }

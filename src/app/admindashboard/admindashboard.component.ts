@@ -102,6 +102,7 @@ export class AdmindashboardComponent implements OnInit {
 
   populate() {
     this.yesterday.setDate(this.today.getDate() - 1);
+    console.log(this.yesterday);
     this.fetchTasksByDate(this.yesterday);
   }
 
@@ -191,6 +192,7 @@ export class AdmindashboardComponent implements OnInit {
         this.fetchedTasks = data;
         this.resultsDate = date;
         this.sortFetchedTasks();
+        console.log(date);
       },
       (err) => this.errorHandler(err)
     );
@@ -269,5 +271,10 @@ export class AdmindashboardComponent implements OnInit {
         },
         (err) => this.errorHandler(err)
       );
+  }
+  logout() {
+    this.router.navigate(['./login']);
+    localStorage.removeItem('adminId');
+    localStorage.removeItem('token');
   }
 }

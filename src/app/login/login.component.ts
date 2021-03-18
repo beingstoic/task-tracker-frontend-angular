@@ -5,7 +5,12 @@ import { Admin } from '../model/admin';
 import { Employee } from '../model/employee';
 import { login } from '../model/login';
 import { LoginserviceService } from '../service/loginservice.service';
-import { FormBuilder, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-login',
@@ -18,6 +23,7 @@ export class LoginComponent implements OnInit {
   admin: Admin;
   employee: Employee;
   roles: string[] = ['ADMIN', 'EMPLOYEE'];
+  loginForm: FormGroup;
 
   constructor(
     private router: Router,
@@ -27,10 +33,21 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.minLength]],
+      password: ['', [Validators.required, Validators.minLength(4)]],
+      role: ['', [Validators.required, Validators.minLength]],
+    });
     this.login = new login();
   }
 
   onSubmit() {
+    console.log(this.loginForm.value);
+    this.login.email = this.loginForm.value.email;
+    this.login.password = this.loginForm.value.password;
+    this.login.role = this.loginForm.value.role;
+    console.log(this.login);
+    this.loginservice.setEndTime().subscribe();
     if (this.login.role == 'ADMIN') {
       this.loginAdmin();
     }
@@ -48,6 +65,7 @@ export class LoginComponent implements OnInit {
       (data) => {
         console.log(data);
         localStorage.setItem('adminId', data.adminId);
+        localStorage.setItem('token', data.adminId);
         this.router.navigate(['../admindashboard/']);
       },
       (err) => this.errorHandler(err)
@@ -58,6 +76,7 @@ export class LoginComponent implements OnInit {
       (data) => {
         console.log(data);
         localStorage.setItem('empId', data.empId);
+        localStorage.setItem('token', data.empId);
         this.router.navigate(['../employeedashboard']);
       },
       (err) => this.errorHandler(err)
@@ -65,8 +84,8 @@ export class LoginComponent implements OnInit {
   }
 
   errorHandler(err) {
-    if (err.error.message != null)
-      this.toastr.error('Error', err.error.message);
+    if (err.error.status != null)
+      this.toastr.error('Error', 'Incorrect   Username or Password');
     else
       this.toastr.error('Error', 'Request Timed out, Please try again later');
   }

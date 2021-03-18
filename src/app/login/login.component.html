@@ -7,9 +7,18 @@
     <div class="card-body">
       <div class="form-row">
         <div class="col">
-          <form (ngSubmit)="onSubmit()" #addForm="ngForm">
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
             <br />
-            <div class="form-holder">
+
+            <div
+              class="form-holder"
+              [ngClass]="{
+                'has-error':
+                  loginForm.get('email').errors &&
+                  (loginForm.get('email').touched ||
+                    loginForm.get('email').dirty)
+              }"
+            >
               <div class="input-group">
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="basic-addon1">
@@ -22,24 +31,38 @@
                   placeholder="email"
                   required
                   minlength="4"
-                  [(ngModel)]="login.email"
-                  #email="ngModel"
+                  formControlName="email"
                   name="email"
                   id="email"
                 />
-                <div
-                  *ngIf="email.touched && email.dirty && email.invalid"
-                  class="form-input-error-msg alert alert-danger"
-                >
-                  <div *ngIf="email.errors.required">Field Cannot be Empty</div>
-                  <div *ngIf="email.errors.minlength">
-                    Must have atleast 4 characters
-                  </div>
+              </div>
+              <div
+                class="form-input-error-msg alert alert-danger"
+                *ngIf="
+                  loginForm.get('email').errors &&
+                  (loginForm.get('email').touched ||
+                    loginForm.get('email').dirty)
+                "
+              >
+                <div *ngIf="loginForm.get('email').errors.required">
+                  Email is Required
+                </div>
+                <div *ngIf="loginForm.get('email').errors.minlength">
+                  Must have atleast 4 characters
                 </div>
               </div>
             </div>
+
             <br />
-            <div class="form-group">
+            <div
+              class="form-group"
+              [ngClass]="{
+                'has-error':
+                  loginForm.get('password').errors &&
+                  (loginForm.get('password').touched ||
+                    loginForm.get('password').dirty)
+              }"
+            >
               <div class="input-group">
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="basic-addon1"
@@ -49,10 +72,9 @@
                 <input
                   type="{{ inputType }}"
                   placeholder="Password"
-                  #pwd="ngModel"
                   name="passWord"
                   class="form-control"
-                  [(ngModel)]="login.password"
+                  formControlName="password"
                   required
                 />
                 <div class="input-group-append">
@@ -61,13 +83,34 @@
                   ></span>
                 </div>
               </div>
-              <span *ngIf="!pwd.valid && pwd.touched">
-                <p class="errorText">Please enter password</p>
-              </span>
+
+              <div
+                class="form-input-error-msg alert alert-danger"
+                *ngIf="
+                  loginForm.get('password').errors &&
+                  (loginForm.get('password').touched ||
+                    loginForm.get('password').dirty)
+                "
+              >
+                <div *ngIf="loginForm.get('password').errors.required">
+                  Password is Required
+                </div>
+                <div *ngIf="loginForm.get('password').errors.minlength">
+                  minimum length should be 4
+                </div>
+              </div>
             </div>
-            <!-- </div> -->
+
             <br />
-            <div class="form-holder">
+
+            <div
+              class="form-holder"
+              [ngClass]="{
+                'has-error':
+                  loginForm.get('role').errors &&
+                  (loginForm.get('role').touched || loginForm.get('role').dirty)
+              }"
+            >
               <div class="input-group">
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="basic-addon1">
@@ -79,8 +122,7 @@
                   class="form-control"
                   placeholder="role"
                   required
-                  [(ngModel)]="login.role"
-                  #role="ngModel"
+                  formControlName="role"
                   name="role"
                   id="role"
                 >
@@ -88,14 +130,16 @@
                     {{ role }}
                   </option>
                 </select>
-                <div
-                  *ngIf="role.touched && email.dirty && role.invalid"
-                  class="form-input-error-msg alert alert-danger"
-                >
-                  <div *ngIf="role.errors.required">Field Cannot be Empty</div>
-                  <div *ngIf="role.errors.minlength">
-                    Must have atleast 4 characters
-                  </div>
+              </div>
+              <div
+                class="form-input-error-msg alert alert-danger"
+                *ngIf="
+                  loginForm.get('role').errors &&
+                  (loginForm.get('role').touched || loginForm.get('role').dirty)
+                "
+              >
+                <div *ngIf="loginForm.get('role').errors.required">
+                  Please Select Role
                 </div>
               </div>
             </div>
@@ -103,7 +147,6 @@
             <div class="form-group">
               <input
                 class="btn btn-success"
-                [disabled]="!addForm.valid"
                 type="submit"
                 name="submit_reg"
                 value="Login"

@@ -1,0 +1,221 @@
+<div class="container">
+  <div class="nav-container">
+    <ul class="nav nav-pills" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a
+          class="nav-link active"
+          id="home-tab"
+          data-toggle="tab"
+          href="#home"
+          role="tab"
+          aria-controls="home"
+          aria-selected="true"
+          >See Bad Tasks</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          id="profile-tab"
+          data-toggle="tab"
+          href="#profile"
+          role="tab"
+          aria-controls="profile"
+          aria-selected="false"
+          >See bad Employees</a
+        >
+      </li>
+    </ul>
+  </div>
+
+  <div class="tab-content" id="myTabContent">
+    <div
+      class="tab-pane fade show active"
+      id="home"
+      role="tabpanel"
+      aria-labelledby="home-tab"
+    >
+      <div class="row d-flex justify-content-center">
+        <div class="col-lg-9 card-margin">
+          <div class="card search-form">
+            <div class="card-body p-0">
+              <form id="search-form">
+                <div class="row">
+                  <form
+                    class="col-12"
+                    [formGroup]="taskForm"
+                    (ngSubmit)="onSubmit()"
+                  >
+                    <div class="row no-gutters">
+                      <div class="col-lg-5 col-md-4 col-sm-12 p-0">
+                        <input
+                          formControlName="startDate"
+                          placeholder="Enter Start Date"
+                          type="text"
+                          onfocus="(this.type='date')"
+                          id="date"
+                        />
+                      </div>
+                      <div class="col-lg-6 col-md-4 col-sm-12 p-0">
+                        <input
+                          formControlName="endDate"
+                          placeholder="Enter End Date"
+                          type="text"
+                          onfocus="(this.type='date')"
+                          id="date"
+                        />
+                      </div>
+
+                      <div class="col-lg-1 col-md-1 col-sm-12 p-0">
+                        <button type="submit" class="btn btn-base">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="feather feather-search"
+                          >
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="tab-pane fade"
+      id="profile"
+      role="tabpanel"
+      aria-labelledby="profile-tab"
+    >
+      <div class="row d-flex justify-content-center">
+        <div class="col-lg-5 card-margin">
+          <div class="card search-form">
+            <div class="card-body p-0">
+              <form id="search-form">
+                <div class="row">
+                  <form
+                    class="col-12"
+                    [formGroup]="form"
+                    (ngSubmit)="onSubmit()"
+                  >
+                    <div class="row no-gutters">
+                      <div class="col-lg-9 col-md-9 col-sm-12 p-0">
+                        <input
+                          formControlName="taskDate"
+                          placeholder="Enter Date"
+                          type="text"
+                          onfocus="(this.type='date')"
+                          id="date"
+                        />
+                      </div>
+
+                      <div class="col-lg-1 col-md-1 col-sm-12 p-0">
+                        <button type="submit" class="btn btn-base">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="feather feather-search"
+                          >
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col vertical-scroll">
+        <div class="card">
+          <!-- Card header -->
+          <div class="card-header">
+            <h3 class="mb-0">
+              Showing Results for {{ resultsDate | date: "fullDate" }}
+            </h3>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-flush" id="datatable-basic">
+              <thead class="thead-light">
+                <tr>
+                  <th>Emp ID</th>
+                  <th>Employee Name</th>
+                  <th>Total Duration</th>
+                </tr>
+              </thead>
+              <tbody *ngFor="let object of displayObject">
+                <tr
+                  data-toggle="collapse"
+                  [attr.data-target]="'#' + object.empId"
+                  aria-expanded="false"
+                  aria-controls="collapse\"
+                >
+                  <td>{{ object.empId }}</td>
+                  <td>{{ object.name }}</td>
+                  <td>{{ object.totalDuration | duration }}</td>
+                </tr>
+                <tr colspan="3">
+                  <div
+                    class="table-responsive collapse collapse in"
+                    id="{{ object.empId }}"
+                    colspan="4"
+                  >
+                    <table class="content-table" id="datatable-basic">
+                      <caption>
+                        Displaying tasks
+                      </caption>
+                      <thead>
+                        <tr>
+                          <th>Start Time</th>
+                          <th>End Time</th>
+                          <th>Task Name</th>
+                          <th>Duration</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let task of object.tasks">
+                          <td>{{ task.startTime | date: "shortTime" }}</td>
+                          <td>{{ task.endTime | date: "shortTime" }}</td>
+                          <td>{{ task.taskName }}</td>
+                          <td>{{ task.duration | duration }}</td>
+                          <td *ngIf="!task.duration">In Progress</td>
+                          <td *ngIf="task.duration">Ended</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
