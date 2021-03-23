@@ -210,6 +210,10 @@ export class AdmindashboardComponent implements OnInit {
     );
   }
 
+  badActivity() {
+    this.router.navigate(['./badtasks']);
+  }
+
   fetchTasksByEmpId(empId: string) {
     this.taskService.fetchAssignedTasks(empId).subscribe(
       (data) => {

@@ -23,6 +23,11 @@ const routes: Routes = [
     path: 'badtasks',
     component: BadtasksComponent,
   },
+  {
+    path: 'badtasks',
+    component: BadtasksComponent,
+    canActivate: [AuthGuard],
+  },
 ];
 
 @NgModule({

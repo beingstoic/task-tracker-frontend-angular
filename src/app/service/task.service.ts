@@ -8,6 +8,7 @@ const baseUrl = 'http://localhost:8293/';
   providedIn: 'root',
 })
 export class TaskService {
+  datepipe: any;
   constructor(private http: HttpClient) {}
 
   fetchAssignedTasks(empId: String): Observable<TaskTracker[]> {
@@ -78,6 +79,22 @@ export class TaskService {
     return this.http.post<DisplayModel[]>(
       baseUrl + 'tasktracker/fetch-bad-tasks-by-date/',
       date
+    );
+  }
+
+  fetchBademployeeByDate(
+    startdate: Date,
+    enddate: Date
+  ): Observable<DisplayModel[]> {
+    let startdate1 = this.datepipe.transform(startdate, 'yyyy-MM-dd');
+    let enddate1 = this.datepipe.transform(enddate, 'yyyy-MM-dd');
+    console.log(startdate, enddate);
+    return this.http.get<DisplayModel[]>(
+      baseUrl +
+        'tasktracker/fetch-bad-employees-by-date/' +
+        startdate1 +
+        '/' +
+        enddate1
     );
   }
 }

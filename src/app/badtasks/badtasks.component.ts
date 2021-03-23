@@ -63,9 +63,35 @@ export class BadtasksComponent implements OnInit {
     );
   }
 
+  fetchBadEmployeeByDate(startDate: Date, endDate: Date) {
+    this.taskService.fetchBademployeeByDate(startDate, endDate).subscribe(
+      (data) => {
+        this.displayObject = data;
+        console.log(data);
+      },
+      (err) => this.errorHandler(err)
+    );
+  }
+
   onSubmit() {
     let date = new Date(this.form.value.taskDate);
     console.log(date);
     this.fetchBadTasksByDate(date);
+  }
+
+  onSubmit1() {
+    this.fetchBadEmployeeByDate(
+      this.taskForm.value.startDate,
+      this.taskForm.value.endDate
+    );
+  }
+
+  logout() {
+    this.router.navigate(['./login']);
+    localStorage.removeItem('adminId');
+    localStorage.removeItem('token');
+  }
+  back() {
+    this.router.navigate(['./admindashboard']);
   }
 }
